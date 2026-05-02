@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { LayoutDashboard, CheckSquare, Users, LogOut } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Users, LogOut, Briefcase, Lock } from 'lucide-react';
 import { useAuth } from '../AuthContext';
 import { supabase } from '../supabase';
+import { DEPARTMENTS } from '../constants';
 import './Sidebar.css';
 
 function avatarFor(name) {
@@ -9,7 +10,7 @@ function avatarFor(name) {
   return `https://ui-avatars.com/api/?name=${safe}&background=2563eb&color=fff`;
 }
 
-export function Sidebar({ currentView, setCurrentView, viewingBoardOwnerId, setViewingBoardOwnerId }) {
+export function Sidebar({ currentView, setCurrentView, viewingBoardOwnerId, setViewingBoardOwnerId, viewingDepartment, setViewingDepartment }) {
   const { user, profile, isAdmin, signOut } = useAuth();
   const [teamProfiles, setTeamProfiles] = useState([]);
 
@@ -18,7 +19,7 @@ export function Sidebar({ currentView, setCurrentView, viewingBoardOwnerId, setV
     let cancelled = false;
     supabase
       .from('profiles')
-      .select('id,name,role')
+      .select('id,name,role,department')
       .order('name')
       .then(({ data, error }) => {
         if (cancelled) return;
@@ -33,15 +34,24 @@ export function Sidebar({ currentView, setCurrentView, viewingBoardOwnerId, setV
 
   const goToMyBoard = () => {
     setViewingBoardOwnerId(user.id);
+    setViewingDepartment(null);
     setCurrentView('tasks');
   };
 
   const goToBoard = (ownerId) => {
     setViewingBoardOwnerId(ownerId);
+    setViewingDepartment(null);
     setCurrentView('tasks');
   };
 
-  const isViewingSelf = viewingBoardOwnerId === user?.id;
+  const goToDepartment = (deptId) => {
+    if (!isAdmin && profile?.department !== deptId) return;
+    setViewingDepartment(deptId);
+    setViewingBoardOwnerId(null);
+    setCurrentView('department');
+  };
+
+  const isViewingSelf = currentView === 'tasks' && viewingBoardOwnerId === user?.id;
 
   return (
     <aside className="sidebar">
@@ -60,12 +70,43 @@ export function Sidebar({ currentView, setCurrentView, viewingBoardOwnerId, setV
         </button>
 
         <button
-          className={`nav-item ${currentView === 'tasks' && isViewingSelf ? 'active' : ''}`}
+          className={`nav-item ${isViewingSelf ? 'active' : ''}`}
           onClick={goToMyBoard}
         >
           <CheckSquare size={20} />
           <span>Meu quadro</span>
         </button>
+
+        <button
+          className={`nav-item ${currentView === 'clients' ? 'active' : ''}`}
+          onClick={() => setCurrentView('clients')}
+        >
+          <Briefcase size={20} />
+          <span>Clientes</span>
+        </button>
+
+        <div className="nav-section">
+          <div className="nav-section-title">
+            <Users size={14} />
+            <span>Áreas</span>
+          </div>
+          {DEPARTMENTS.map(dept => {
+            const allowed = isAdmin || profile?.department === dept.id;
+            const active = currentView === 'department' && viewingDepartment === dept.id;
+            return (
+              <button
+                key={dept.id}
+                className={`nav-item nav-item-team ${active ? 'active' : ''} ${!allowed ? 'nav-item-locked' : ''}`}
+                onClick={() => goToDepartment(dept.id)}
+                title={allowed ? dept.label : `${dept.label} — acesso restrito`}
+              >
+                <span className="dept-icon">{dept.label.charAt(0)}</span>
+                <span>{dept.label}</span>
+                {!allowed && <Lock size={12} className="lock-icon" />}
+              </button>
+            );
+          })}
+        </div>
 
         {isAdmin && teamProfiles.length > 0 && (
           <div className="nav-section">

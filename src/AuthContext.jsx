@@ -6,10 +6,10 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(supabase !== null);
 
   const loadProfile = useCallback(async (userId) => {
-    if (!userId) return null;
+    if (!userId || !supabase) return null;
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -23,6 +23,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    if (!supabase) return;
     let mounted = true;
 
     supabase.auth.getSession().then(async ({ data }) => {
@@ -62,8 +63,11 @@ export function AuthProvider({ children }) {
       password,
       options: { data: { name } },
     });
-    if (error) throw error;
-    // Caso "Confirm email" esteja desativado, signUp já retorna sessão e o trigger criou profile/board.
+    if (error) {
+      console.error('[signUp] erro:', error);
+      throw error;
+    }
+    console.log('[signUp] resposta:', { hasUser: !!data.user, hasSession: !!data.session });
     if (data.session?.user) {
       const p = await loadProfile(data.session.user.id);
       setProfile(p);

@@ -1,0 +1,228 @@
+.clients-page {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.clients-list-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+  min-height: 0;
+}
+
+.clients-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.clients-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0 0.6rem;
+  color: var(--color-text-secondary);
+}
+
+.clients-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0;
+  font: inherit;
+  font-size: 0.875rem;
+  outline: none;
+  color: var(--color-text-primary);
+}
+
+.clients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.client-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+  border: 1px solid transparent;
+  transition: all 0.12s ease;
+}
+
+.client-row:hover {
+  background: var(--color-bg);
+}
+
+.client-row.active {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.client-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.client-code {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.client-name {
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.situacao-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.clients-empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  padding: 2rem 1rem;
+}
+
+.clients-detail-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  padding: 2rem;
+}
+
+.client-detail {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.client-detail-code {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.client-detail-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+}
+
+.client-detail-name:disabled {
+  color: var(--color-text-primary);
+  -webkit-text-fill-color: var(--color-text-primary);
+  opacity: 1;
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.5rem;
+}
+
+.detail-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.detail-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-grid .detail-field:has(textarea) {
+  grid-column: 1 / -1;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+}
+
+.readonly-note {
+  margin-top: 1rem;
+  background: var(--color-warning-bg);
+  color: #92400e;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .clients-page {
+    grid-template-columns: 1fr;
+  }
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
